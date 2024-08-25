@@ -2,72 +2,146 @@ from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen,ScreenManager
 from kivy.lang import Builder
 from kivymd.toast.kivytoast.kivytoast import toast
+import requests
 import webbrowser
-
 kv='''
-
 Manager:
     Fir:
     Sec:
-               
+
 <Fir>:
-    MDBottomNavigation:
-        panel_color:0,1,0,1
-        text_color_active:1,0,0,1
-        text_color_normal:0,0,1,1
-        MDBottomNavigationItem:
-            name:'s1'
-            icon:'home'
-            text:'HOME'
-            Carousel:
-                direction:'bottom'
-                MDLabel:
-                    text:'HAR HAR MAHADEV'
-                    bold:True
-                    halign:'center'
-                    font_size:'50sp'
-                    text_color:0,0,1,1
-                    font_size:'50sp'
-                   
-        MDBottomNavigationItem:
-            name:'s2'   
-            icon:'android'              
-            text:'THEME CHANGER'         
-            MDSwitch:
-                id:sw1
-                on_active:app.th()           
-                
-            
-                                                     
-                    
-                    
-                    
-                    
+    name:'home'
+    id:screen1
+    MDTextField:
+        id:t1
+        hint_text:'ENTER CITY'
+        size_hint_x:1
+        pos_hint:{'center_x':0.5,'center_y':0.8}
+        text_color_normal: 0,0,0,1
+      
+        
+    MDFloatingActionButton:
+        id:fb1
+        icon:'magnify'       
+        pos_hint:{'center_x':0.5,'center_y':0.7}
+        size_hint_x:1
+        on_press:
+            app.wh()
+    
+    
+    
 
+    
+    MDLabel:
+        id:l1
+        text:'WHEATHER STATUS'
+        pos_hint:{'center_x':0.3,'center_y':0.6}
+        size_hint_x:0.5
+        bold:True
+        
+                                           
+    MDLabel:
+        id:l2
+        text:'TEMPERATURE'
+        pos_hint:{'center_x':0.3,'center_y':0.5}
+        size_hint_x:0.5   
+        bold:True
+        
+    MDLabel:
+        id:l3
+        text:'PRESSURE'
+        pos_hint:{'center_x':0.3,'center_y':0.4}
+        size_hint_x:0.5   
+        bold:True                               
+                    
+    MDLabel:
+        id:l4
+        text:'WIND SPEED'
+        pos_hint:{'center_x':0.3,'center_y':0.3}
+        size_hint_x:0.5   
+        bold:True                               
+    MDLabel:
+        id:l5
+        text:'DESCRIPTION'
+        pos_hint:{'center_x':0.3,'center_y':0.2}
+        size_hint_x:0.5   
+        bold:True    
+        
+    MDLabel:
+        id:al1
+        text:'---------------'
+        pos_hint:{'center_x':0.8,'center_y':0.6}
+        size_hint_x:0.5   
+        bold:True                                    
+                                      
+    MDLabel:
+        id:al2
+        text:'---------------'
+        pos_hint:{'center_x':0.8,'center_y':0.5}
+        size_hint_x:0.5   
+        bold:True            
+
+    MDLabel:
+        id:al3
+        text:'---------------'
+        pos_hint:{'center_x':0.8,'center_y':0.4}
+        size_hint_x:0.5   
+        bold:True          
+
+  
+
+    MDLabel:
+        id:al4
+        text:'---------------'
+        pos_hint:{'center_x':0.8,'center_y':0.3}
+        size_hint_x:0.5   
+        bold:True          
+
+    MDLabel:
+        id:al5
+        text:'---------------'
+        pos_hint:{'center_x':0.8,'center_y':0.2}
+        size_hint_x:0.5   
+        bold:True   
+        
     MDTopAppBar:
-        id:m1
-        title:'HAR HAR MAHADEV'
-        pos_hint:{"top":1}
-        md_bg_color:0,1,0,1
-        left_action_items:[['youtube',lambda x: app.pr()]]
+        id:mt1
+        title:'WHEATHER CHECKER'
+        pos_hint:{'top':1}
+        left_action_items:[['menu',lambda x:n1.set_state('open')]]                       
+                      
+                                    
 
+    MDNavigationDrawer:
+        id:n1
+        MDList:
+            pos_hint:{'top':1}
+            OneLineIconListItem:
+                text:'YOUTUBE'
+                on_press:
+                    app.yc()                  
+                IconLeftWidget:
+                    icon:'youtube'
+                    md_bg_color:'red'
+                    on_press:
+                        app.yv()
+                   
+            OneLineIconListItem:
+                text:'CALCULATOR'
+                on_press:
+                    app.ap()
+                IconLeftWidget:
+                    icon:'android'           
+                    md_bg_color:'red'        
+                    on_press:
+                        app.ap()
 
-
-
-
-
-
+               
+                      
+                             
+                                           
 
 '''
-
-
-
-
-
-
-
-
-
 
 
 class Fir(Screen):
@@ -86,14 +160,63 @@ class Demo(MDApp):
     def build(self):
         self.u=Builder.load_string(kv)
         return self.u
-    def pr(self):
-        webbrowser.open('https://youtube.com/shorts/kKQv_wpl4vM?si=stHFkYJBjMfDI4pd')        
-    def th(self):
-        self.theme_cls.theme_style = "Dark"
-        self.theme_cls.primary_palette = "Blue"                 
-                       
-        
-        
+
+    def wh(self):
+        city=self.u.get_screen('home').ids.t1.text
+    
+        self.r=requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid=d122001753e3d91ae8aeb85e48687d80').json()                    
+        self.code=self.r['cod']
+          
+        try:              
+            sta=self.r['weather'][0]['main'].upper()
+            temp=str(int(self.r['main']['temp_max']-273.15)).upper()
+            
+            pre=str(self.r['main']['pressure'])
+            
+            ws=str(int(self.r['wind']['speed']*18/5))
+            des=self.r['weather'][0]['description'].upper()
+            
+            self.u.get_screen('home').ids.al1.text=sta
+            
+            self.u.get_screen('home').ids.al2.text=f'{temp}°C'
+            
+            self.u.get_screen('home').ids.al3.text=pre
+            
+            self.u.get_screen('home').ids.al4.text=f'{ws}km/h'
+            
+            self.u.get_screen('home').ids.al5.text=des
+            
+          
+                                              
+              
+        except:
+            if self.code=='404':
+                toast('CITY NOT FOUND')
+                self.u.get_screen('home').ids.al1.text='---------------'
+                self.u.get_screen('home').ids.al2.text='---------------'
+                self.u.get_screen('home').ids.al3.text='---------------'
+                self.u.get_screen('home').ids.al4.text='---------------'
+                self.u.get_screen('home').ids.al5.text='---------------'
+                
+                
+            else:
+                toast('ERROR HAPPENED')    
+                self.u.get_screen('home').ids.al1.text='---------------'
+                self.u.get_screen('home').ids.al2.text='---------------'
+                self.u.get_screen('home').ids.al3.text='---------------'
+                self.u.get_screen('home').ids.al4.text='---------------'
+                self.u.get_screen('home').ids.al5.text='---------------'
+                 
+
+    def yv(self):
+        webbrowser.open('https://youtube.com/shorts/kKQv_wpl4vM?si=82XHYveNVQ4HFMmO')               
+                
+    def yc(self):
+        webbrowser.open('https://youtube.com/@ffgaming-su2eu?si=qofaL1xbplXI2Yx-')                                                       
+                                
+    def ap(self):
+        webbrowser.open("https://www.amazon.com/dp/B0DCVHKHSX/ref=apps_sf_sta")                                                    
+                                                                
         
 
 Demo().run()
