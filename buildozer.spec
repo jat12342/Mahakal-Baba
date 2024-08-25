@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = Mahakal Calculator
+title = Weather
 
 # (str) Package name
-package.name = mahakalraja
+package.name = mahakalbhakat_baba
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.mahakalraja
+package.domain = com.mahakalbhakat_baba
 
 # (str) Source code where the main.py live
 source.dir = .
