@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = Weather
+title = CALCULATOR_2024
 
 # (str) Package name
-package.name = mahakalbhakat_baba
+package.name = mahakalbhakat_jai_mahakal
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.mahakalbhakat_baba
+package.domain = com.mahakalbhakat_jai_mahakal
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -29,7 +29,7 @@ source.include_exts = py,png,jpg,kv,atlas,ttf
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.1
+version = 0.8
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
